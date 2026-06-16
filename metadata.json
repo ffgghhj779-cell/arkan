@@ -1,0 +1,8 @@
+{
+  "name": "Seara Foods Clone",
+  "description": "A precise Arabic landing page clone for Seara Foods.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

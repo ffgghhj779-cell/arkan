@@ -1,0 +1,92 @@
+@import "tailwindcss";
+
+@theme {
+  --font-arabic: var(--font-tajawal), ui-sans-serif, system-ui, sans-serif;
+
+  --color-arkan-orange: #E85D04;
+  --color-arkan-orange-hover: #c45203;
+  --color-arkan-orange-light: #FFF3E8;
+  --color-arkan-navy: #1B263B;
+  --color-arkan-navy-deep: #0D1B2A;
+  --color-arkan-bg: #F8F9FA;
+  --color-arkan-text: #1B263B;
+  --color-arkan-beige: #FFF9F0;
+  --color-arkan-gold: #FFD54F;
+
+  --shadow-arkan-card: 0 4px 6px -1px rgba(27, 38, 59, 0.06), 0 12px 24px -4px rgba(27, 38, 59, 0.08);
+  --shadow-premium: 0 20px 40px -10px rgba(27, 38, 59, 0.1), 0 8px 16px -6px rgba(27, 38, 59, 0.04);
+  --shadow-premium-hover: 0 32px 64px -16px rgba(232, 93, 4, 0.18), 0 16px 32px -12px rgba(27, 38, 59, 0.12);
+  --shadow-glass: 0 8px 32px rgba(27, 38, 59, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+
+  --radius-arkan: 0.75rem;
+}
+
+body {
+  @apply bg-white text-arkan-text selection:bg-arkan-orange selection:text-white;
+}
+
+/* Premium section rhythm */
+.section-padding {
+  @apply py-20 md:py-28 lg:py-32;
+}
+
+.section-heading {
+  @apply text-4xl md:text-5xl lg:text-[3.25rem] font-black text-arkan-navy leading-[1.15] tracking-tight;
+}
+
+.section-subheading {
+  @apply text-xl md:text-2xl text-arkan-orange font-bold leading-relaxed;
+}
+
+.section-body {
+  @apply text-lg md:text-xl text-arkan-navy/75 font-medium leading-[1.85] max-w-3xl;
+}
+
+/* Subtle grain texture overlay */
+.texture-overlay::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  opacity: 0.035;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  z-index: 1;
+}
+
+/* Hide scrollbar for carousels */
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+.animate-float {
+  animation: float 4s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background-color: color-mix(in srgb, var(--color-arkan-orange) 60%, transparent);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background-color: var(--color-arkan-orange);
+}

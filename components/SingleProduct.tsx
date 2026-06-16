@@ -1,0 +1,81 @@
+"use client";
+
+import Image from "next/image";
+import { useToast } from "./ToastProvider";
+import { motion } from "motion/react";
+
+export default function SingleProductHighlight() {
+  const { addToast } = useToast();
+
+  const handleAction = () => {
+    addToast("جاري نقلك لتصفح المجموعة كاملة!");
+    // Scroll to products if needed
+    const productsSection = document.getElementById('products');
+    if (productsSection) {
+      productsSection.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
+  return (
+    <section className="bg-white py-24 pb-0 -mt-1 relative z-0 overflow-hidden">
+      <div className="max-w-6xl mx-auto px-4 flex flex-col md:flex-row items-center gap-16">
+        
+        {/* Text Content Right (in RTL) */}
+        <motion.div 
+          initial={{ opacity: 0, x: 50 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+          className="flex-1 text-center md:text-right"
+        >
+           <h2 className="text-3xl md:text-4xl font-black text-arkan-orange mb-6 leading-snug">
+             أركان دجاج كامل مجمد<br />بدون أحشاء ٩٠٠غ
+           </h2>
+           <p className="text-arkan-navy font-bold text-lg leading-relaxed mb-8 max-w-lg mx-auto md:mx-0">
+             يساعد منتجنا من الدجاج المجمد الجاهز للشواء في توفير وقت الشواء المنزلي و يتيح لكم المجال لابتكار وصفات جديدة، بالإضافة لميزة التحكم بمواصفات الحصص الغذائية.
+           </p>
+           <motion.button 
+             whileHover={{ scale: 1.05 }}
+             whileTap={{ scale: 0.95 }}
+             onClick={handleAction}
+             className="bg-arkan-orange hover:bg-arkan-orange-hover text-white font-bold py-4 px-10 rounded-xl shadow-premium-hover transition-colors inline-block outline-none focus-visible:ring-4 focus-visible:ring-arkan-orange/30"
+           >
+              عرض المنتجات
+           </motion.button>
+        </motion.div>
+
+        {/* Product Image Left (in RTL) */}
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.8, rotate: -5 }}
+          whileInView={{ opacity: 1, scale: 1, rotate: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 1, type: "spring", bounce: 0.4 }}
+          className="flex-1 flex justify-center pb-20 relative"
+        >
+           <div className="relative w-64 h-[400px]">
+              <Image 
+                src="https://images.unsplash.com/photo-1598514982205-f36b96d1e8d4?q=80&w=800&auto=format&fit=crop"
+                alt="Whole Frozen Chicken"
+                fill
+                className="object-contain drop-shadow-2xl hover:scale-105 transition-transform duration-500 mix-blend-multiply"
+              />
+              {/* Product Badge Mockup */}
+              <motion.div 
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5, duration: 0.5 }}
+                className="absolute inset-x-4 bottom-16 h-24 bg-white/90 backdrop-blur rounded-2xl p-2 flex flex-col items-center justify-center border-t-4 border-arkan-orange shadow-premium"
+              >
+                 <div className="w-12 h-6 bg-arkan-orange text-white rounded-[40%] flex items-center justify-center font-bold text-[10px] mb-1">
+                   أركان
+                 </div>
+                 <span className="text-xs font-bold text-arkan-navy mt-1">دجاج شواية مجمد</span>
+                 <span className="text-[10px] font-bold text-arkan-orange mt-1">الوزن الصافي ٩٠٠ غرام</span>
+              </motion.div>
+           </div>
+        </motion.div>
+
+      </div>
+    </section>
+  );
+}
