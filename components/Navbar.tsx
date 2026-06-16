@@ -2,10 +2,10 @@
 
 import Link from "next/link";
 import { Search, Facebook, Twitter, Instagram, Youtube, Menu, X } from "lucide-react";
-import Image from "next/image";
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { useToast } from "./ToastProvider";
+import ArkanLogo from "./ArkanLogo";
 
 const navLinks = [
   { name: "الصفحة الرئيسية", href: "#" },
@@ -41,14 +41,13 @@ export default function Navbar() {
       <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 relative z-50 bg-arkan-orange">
         <div className="flex justify-between items-center h-24">
           {/* Logo Area (Right side in RTL) */}
-          <Link href="#" className="flex-shrink-0 relative z-50 group">
-            <motion.div 
+          <Link href="#" className="flex-shrink-0 relative z-50 group flex items-center justify-center">
+            <motion.div
               whileHover={{ scale: 1.05, y: 16 }}
               transition={{ type: "spring", stiffness: 300, damping: 20 }}
-              className="w-28 h-28 bg-white text-arkan-orange rounded-[40%] flex flex-col items-center justify-center font-black text-2xl shadow-premium border-4 border-arkan-orange translate-y-4 leading-none pt-1"
+              className="translate-y-4 flex items-center justify-center"
             >
-              <span className="text-sm tracking-widest uppercase mb-1">Arkan</span>
-              <span>أركان</span>
+              <ArkanLogo variant="navbar" priority />
             </motion.div>
           </Link>
 

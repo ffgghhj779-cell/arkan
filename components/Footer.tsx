@@ -7,6 +7,7 @@ import GenericModal from "./GenericModal";
 import ContactModal from "./ContactModal";
 import { useToast } from "./ToastProvider";
 import { motion } from "motion/react";
+import ArkanLogo from "./ArkanLogo";
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -97,9 +98,8 @@ export default function Footer() {
 
           {/* Col 4: Logo & Contact */}
           <motion.div variants={itemVariants} className="flex flex-col items-center md:items-end gap-6 text-center md:text-right">
-             <div className="w-40 h-28 bg-white text-arkan-orange rounded-[40%] flex flex-col items-center justify-center font-black text-3xl shadow-premium border-4 border-arkan-orange leading-none pt-2">
-                <span className="text-lg tracking-widest uppercase mb-1">Arkan</span>
-                <span>أركان</span>
+             <div className="flex items-center justify-center">
+               <ArkanLogo variant="footer" />
              </div>
              
              <div className="text-sm">
