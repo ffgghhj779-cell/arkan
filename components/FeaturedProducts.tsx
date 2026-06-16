@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { ShoppingCart, X, ChevronLeft, ChevronRight, Plus } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { useToast } from "./ToastProvider";
+import { fluidSpring, revealTransition } from "@/lib/motion";
 
 const products = [
   {
@@ -132,8 +133,8 @@ export default function FeaturedProducts() {
           initial={{ opacity: 0, y: 32 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-80px" }}
-          transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-          className="text-center mb-14 md:mb-20"
+          transition={revealTransition}
+          className="text-center mb-14 md:mb-20 transform-gpu will-change-[transform,opacity]"
         >
           <h2 className="section-heading mb-5">منتجاتنا المميزة</h2>
           <h3 className="section-subheading mb-6">منتجات لا تقاوم</h3>
@@ -150,20 +151,22 @@ export default function FeaturedProducts() {
           <motion.button
             type="button"
             aria-label="المنتجات السابقة"
-            whileHover={{ scale: 1.08 }}
+            whileHover={{ scale: 1.06 }}
             whileTap={{ scale: 0.95 }}
+            transition={fluidSpring}
             onClick={goPrev}
-            className="hidden md:flex absolute -right-4 lg:-right-14 top-1/2 -translate-y-1/2 w-12 h-12 bg-white/80 backdrop-blur-md rounded-full items-center justify-center shadow-arkan-card hover:shadow-premium border border-white/60 z-20 transition-shadow focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-arkan-orange/30"
+            className="hidden md:flex absolute -right-4 lg:-right-14 top-1/2 -translate-y-1/2 w-12 h-12 bg-white rounded-full items-center justify-center shadow-arkan-card hover:shadow-premium border border-white/60 z-20 transition-shadow focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-arkan-orange/30 transform-gpu will-change-transform"
           >
             <ChevronRight className="w-6 h-6 text-arkan-navy" />
           </motion.button>
           <motion.button
             type="button"
             aria-label="المنتجات التالية"
-            whileHover={{ scale: 1.08 }}
+            whileHover={{ scale: 1.06 }}
             whileTap={{ scale: 0.95 }}
+            transition={fluidSpring}
             onClick={goNext}
-            className="hidden md:flex absolute -left-4 lg:-left-14 top-1/2 -translate-y-1/2 w-12 h-12 bg-white/80 backdrop-blur-md rounded-full items-center justify-center shadow-arkan-card hover:shadow-premium border border-white/60 z-20 transition-shadow focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-arkan-orange/30"
+            className="hidden md:flex absolute -left-4 lg:-left-14 top-1/2 -translate-y-1/2 w-12 h-12 bg-white rounded-full items-center justify-center shadow-arkan-card hover:shadow-premium border border-white/60 z-20 transition-shadow focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-arkan-orange/30 transform-gpu will-change-transform"
           >
             <ChevronLeft className="w-6 h-6 text-arkan-navy" />
           </motion.button>
@@ -172,11 +175,11 @@ export default function FeaturedProducts() {
           <AnimatePresence mode="wait">
             <motion.div
               key={`${page}-${visibleCount}`}
-              initial={{ opacity: 0, x: 40 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -40 }}
-              transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
-              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 transform-gpu will-change-[opacity]"
             >
               {visibleProducts.map((product, idx) => (
                 <motion.article
@@ -184,11 +187,9 @@ export default function FeaturedProducts() {
                   initial={{ opacity: 0, y: 28 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{
-                    delay: idx * 0.08,
-                    duration: 0.5,
-                    ease: [0.22, 1, 0.36, 1],
+                    delay: idx * 0.06,
+                    ...revealTransition,
                   }}
-                  whileHover={{ y: -6 }}
                   onClick={() => setSelectedProduct(product)}
                   onKeyDown={(e) => {
                     if (e.key === "Enter" || e.key === " ") {
@@ -199,7 +200,7 @@ export default function FeaturedProducts() {
                   role="button"
                   tabIndex={0}
                   aria-label={`عرض تفاصيل ${product.title}`}
-                  className={`group flex flex-col bg-white/90 backdrop-blur-sm rounded-3xl shadow-arkan-card border border-white/80 overflow-hidden cursor-pointer hover:shadow-premium-hover transition-shadow duration-500 ring-1 ${product.accentRing} focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-arkan-orange/40`}
+                  className={`group flex flex-col bg-white rounded-3xl shadow-arkan-card border border-white/80 overflow-hidden cursor-pointer hover:shadow-premium-hover hover:-translate-y-1.5 transition-all duration-300 ring-1 ${product.accentRing} focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-arkan-orange/40 transform-gpu will-change-transform`}
                 >
                   {/* Image */}
                   <div className="relative h-60 md:h-64 bg-gradient-to-br from-arkan-orange-light/40 via-white to-arkan-beige/60 flex items-center justify-center overflow-hidden shrink-0">
@@ -207,8 +208,9 @@ export default function FeaturedProducts() {
                       src={product.image}
                       alt={product.title}
                       fill
-                      className="object-cover transition-transform duration-700 ease-out group-hover:scale-110"
+                      className="object-cover transition-transform duration-500 ease-out group-hover:scale-105 transform-gpu"
                       sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                      quality={75}
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-arkan-navy/25 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-400" />
 
@@ -218,7 +220,7 @@ export default function FeaturedProducts() {
                     </div>
 
                     {/* Quick view hint */}
-                    <div className="absolute bottom-4 left-4 z-10 flex items-center gap-1.5 px-3 py-1.5 bg-white/90 backdrop-blur-sm rounded-full text-xs font-bold text-arkan-navy opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300 shadow-sm">
+                    <div className="absolute bottom-4 left-4 z-10 flex items-center gap-1.5 px-3 py-1.5 bg-white rounded-full text-xs font-bold text-arkan-navy opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300 shadow-sm transform-gpu">
                       <Plus className="w-3.5 h-3.5" />
                       عرض التفاصيل
                     </div>
@@ -335,7 +337,7 @@ export default function FeaturedProducts() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setSelectedProduct(null)}
-              className="absolute inset-0 bg-arkan-navy-deep/70 backdrop-blur-lg"
+              className="absolute inset-0 bg-arkan-navy-deep/75"
             />
             <motion.div
               initial={{ scale: 0.92, opacity: 0, y: 24 }}
@@ -347,7 +349,7 @@ export default function FeaturedProducts() {
               <button
                 type="button"
                 onClick={() => setSelectedProduct(null)}
-                className="absolute top-4 left-4 z-50 p-2.5 bg-white/90 backdrop-blur hover:bg-white rounded-full shadow-arkan-card transition-colors focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-arkan-orange/30"
+                className="absolute top-4 left-4 z-50 p-2.5 bg-white hover:bg-gray-50 rounded-full shadow-arkan-card transition-colors focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-arkan-orange/30"
                 aria-label="إغلاق"
               >
                 <X className="w-5 h-5 text-arkan-navy" />
@@ -416,8 +418,9 @@ export default function FeaturedProducts() {
                   </span>
                   <motion.button
                     type="button"
-                    whileHover={{ scale: 1.03 }}
+                    whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.97 }}
+                    transition={fluidSpring}
                     onClick={() => handleAddToCart(selectedProduct.title)}
                     className="flex-1 min-w-[180px] bg-arkan-orange hover:bg-arkan-orange-hover text-white py-4 px-6 rounded-2xl font-black text-base md:text-lg transition-colors flex items-center justify-center gap-3 shadow-premium hover:shadow-premium-hover focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-arkan-orange/30"
                   >

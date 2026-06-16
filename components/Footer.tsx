@@ -98,9 +98,7 @@ export default function Footer() {
 
           {/* Col 4: Logo & Contact */}
           <motion.div variants={itemVariants} className="flex flex-col items-center md:items-end gap-6 text-center md:text-right">
-             <div className="flex items-center justify-center">
-               <ArkanLogo variant="footer" />
-             </div>
+             <ArkanLogo variant="footer" />
              
              <div className="text-sm">
                 <p>منتجات عالية الجودة</p>

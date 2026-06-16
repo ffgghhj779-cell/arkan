@@ -40,7 +40,7 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="absolute inset-0 bg-arkan-navy/80 backdrop-blur-md"
+            className="absolute inset-0 bg-arkan-navy/80"
           />
           <motion.div
             initial={{ scale: 0.95, opacity: 0, y: 30 }}

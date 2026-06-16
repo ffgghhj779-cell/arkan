@@ -21,8 +21,18 @@
   --radius-arkan: 0.75rem;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
-  @apply bg-white text-arkan-text selection:bg-arkan-orange selection:text-white;
+  @apply bg-white text-arkan-text selection:bg-arkan-orange selection:text-white overflow-x-hidden;
+}
+
+/* GPU compositing layer for animated elements */
+.gpu-layer {
+  transform: translateZ(0);
+  backface-visibility: hidden;
 }
 
 /* Premium section rhythm */
@@ -42,15 +52,25 @@ body {
   @apply text-lg md:text-xl text-arkan-navy/75 font-medium leading-[1.85] max-w-3xl;
 }
 
-/* Subtle grain texture overlay */
-.texture-overlay::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  opacity: 0.035;
-  pointer-events: none;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
-  z-index: 1;
+/* Slow arc rotation — CSS only, GPU-friendly */
+@keyframes arc-spin {
+  from { transform: translate(-50%, 0) rotate(0deg); }
+  to { transform: translate(-50%, 0) rotate(360deg); }
+}
+
+.animate-arc-spin {
+  animation: arc-spin 120s linear infinite;
+  will-change: transform;
+}
+
+@keyframes scroll-hint {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(8px); }
+}
+
+.animate-scroll-hint {
+  animation: scroll-hint 2.2s ease-in-out infinite;
+  will-change: transform;
 }
 
 /* Hide scrollbar for carousels */
@@ -60,20 +80,6 @@ body {
 }
 .hide-scrollbar::-webkit-scrollbar {
   display: none;
-}
-
-@keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-8px); }
-}
-
-.animate-float {
-  animation: float 4s ease-in-out infinite;
-}
-
-@keyframes shimmer {
-  0% { background-position: -200% center; }
-  100% { background-position: 200% center; }
 }
 
 /* Custom scrollbar */
@@ -89,4 +95,14 @@ body {
 }
 ::-webkit-scrollbar-thumb:hover {
   background-color: var(--color-arkan-orange);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .animate-arc-spin,
+  .animate-scroll-hint {
+    animation: none;
+  }
 }

@@ -16,8 +16,8 @@ export const metadata: Metadata = {
 
 export default function RootLayout({children}: {children: React.ReactNode}) {
   return (
-    <html lang="ar" dir="rtl" className={`${tajawal.variable} scroll-smooth`} style={{ scrollPaddingTop: '6rem' }}>
-      <body className="font-arabic antialiased" suppressHydrationWarning>
+    <html lang="ar" dir="rtl" className={`${tajawal.variable}`} style={{ scrollPaddingTop: '5rem' }}>
+      <body className="font-arabic antialiased gpu-layer" suppressHydrationWarning>
         <ToastProvider>
           {children}
         </ToastProvider>

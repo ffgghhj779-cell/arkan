@@ -20,11 +20,9 @@ export default function ArkanLogo({
   return (
     <div
       className={cn(
-        "flex items-center justify-center",
-        variant === "navbar" &&
-          "rounded-2xl bg-white px-3 py-2 shadow-premium border-2 border-white/90",
-        variant === "footer" &&
-          "rounded-2xl bg-white px-4 py-3 shadow-premium border-2 border-white/90",
+        "flex items-center justify-center shrink-0",
+        variant === "navbar" && "h-full max-h-16",
+        variant === "footer" && "h-auto",
         className
       )}
     >
@@ -35,9 +33,11 @@ export default function ArkanLogo({
         height={LOGO_HEIGHT}
         priority={priority}
         className={cn(
-          "h-auto object-contain",
-          variant === "navbar" && "w-28 md:w-36 lg:w-40",
-          variant === "footer" && "w-36 md:w-40 lg:w-44",
+          "h-auto object-contain transform-gpu",
+          /* screen: black canvas disappears on orange; logo artwork stays visible */
+          "mix-blend-screen",
+          variant === "navbar" && "w-24 sm:w-28 md:w-32 max-h-14",
+          variant === "footer" && "w-32 md:w-36 lg:w-40 max-h-16",
           imageClassName
         )}
       />
