@@ -10,14 +10,14 @@ import ProductCard, { type ProductView } from "./ProductCard";
 import { useIsMobile } from "@/hooks/use-mobile";
 import {
   fluidSpring,
-  mobileReveal,
   mobileSpring,
-  mobileStaggerContainer,
-  mobileStaggerItem,
-  revealTransition,
   staggerContainer,
   staggerItem,
+  inViewViewport,
+  gpuLayerClass,
+  gpuLayerStyle,
 } from "@/lib/motion";
+import { RevealOnScroll } from "./RevealOnScroll";
 import { productIds, productMeta } from "@/lib/i18n/translations";
 import { lockBodyScroll, unlockBodyScroll } from "@/lib/scroll-lock";
 
@@ -105,9 +105,8 @@ export default function FeaturedProducts() {
   const prevClass = isRtl ? "-right-4 lg:-right-14" : "-left-4 lg:-left-14";
   const nextClass = isRtl ? "-left-4 lg:-left-14" : "-right-4 lg:-right-14";
 
-  const containerVariants = isMobile ? mobileStaggerContainer : staggerContainer;
-  const itemVariants = isMobile ? mobileStaggerItem : staggerItem;
-  const headerTransition = isMobile ? mobileReveal : revealTransition;
+  const containerVariants = isMobile ? undefined : staggerContainer;
+  const itemVariants = isMobile ? undefined : staggerItem;
 
   return (
     <section
@@ -118,17 +117,11 @@ export default function FeaturedProducts() {
       <div className="absolute inset-0 z-0 opacity-40 bg-[radial-gradient(ellipse_at_top,rgba(232,93,4,0.08),transparent_60%)]" />
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <motion.div
-          initial={{ opacity: 0, y: isMobile ? 16 : 32 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: isMobile ? "-40px" : "-80px" }}
-          transition={headerTransition}
-          className="text-center mb-10 md:mb-20 transform-gpu will-change-[transform,opacity]"
-        >
+        <RevealOnScroll className="text-center mb-10 md:mb-20">
           <h2 className="section-heading mb-4 md:mb-5">{t.products.heading}</h2>
           <h3 className="section-subheading mb-4 md:mb-6">{t.products.subheading}</h3>
           <p className="section-body mx-auto px-1">{t.products.body}</p>
-        </motion.div>
+        </RevealOnScroll>
 
         <div className="relative">
           <motion.button
@@ -158,14 +151,15 @@ export default function FeaturedProducts() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              transition={{ duration: isMobile ? 0.2 : 0.35 }}
-              className="transform-gpu will-change-[opacity]"
+              transition={{ duration: isMobile ? 0.15 : 0.35 }}
+              className={gpuLayerClass}
+              style={gpuLayerStyle}
             >
               <motion.div
                 variants={containerVariants}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true, margin: isMobile ? "-24px" : "-60px" }}
+                initial={isMobile ? false : "hidden"}
+                whileInView={isMobile ? undefined : "visible"}
+                viewport={inViewViewport}
                 className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-8"
               >
                 {visibleProducts.map((product) => (

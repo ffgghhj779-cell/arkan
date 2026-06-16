@@ -21,7 +21,7 @@ export default function ArkanBrandLockup({
 
   return (
     <div className={cn("flex items-center gap-x-3 min-w-0", className)}>
-      <div className="relative w-12 h-12 shrink-0 flex items-center justify-center">
+      <div className="relative w-12 h-12 shrink-0 flex items-center justify-center transform-gpu will-change-transform">
         <Image
           src="/logo.png"
           alt=""
@@ -29,17 +29,14 @@ export default function ArkanBrandLockup({
           height={48}
           priority={priority}
           aria-hidden
-          className={cn(
-            "w-12 h-12 object-contain",
-            isNav && "mix-blend-screen"
-          )}
+          className="w-12 h-12 object-contain"
         />
       </div>
       <div className="flex flex-col justify-center min-w-0 gap-0.5 leading-none">
         <span
           className={cn(
             "text-xl font-black tracking-tight truncate",
-            isNav ? "text-white" : "text-[#1B263B]"
+            isNav ? "text-[#1B263B]" : "text-[#1B263B]"
           )}
         >
           {brandName}
@@ -47,7 +44,7 @@ export default function ArkanBrandLockup({
         <span
           className={cn(
             "text-[10px] tracking-wider font-semibold uppercase truncate",
-            isNav ? "text-white/90" : "text-[#E85D04]"
+            isNav ? "text-[#1B263B]/80" : "text-[#E85D04]"
           )}
         >
           {t.common.slogan}

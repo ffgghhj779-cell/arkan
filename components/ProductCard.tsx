@@ -4,6 +4,8 @@ import Image from "next/image";
 import { motion, type Variants } from "motion/react";
 import { Plus } from "lucide-react";
 import type { ProductId } from "@/lib/i18n/translations";
+import { gpuLayerClass, gpuLayerStyle } from "@/lib/motion";
+import { cn } from "@/lib/utils";
 
 export type ProductView = {
   id: ProductId;
@@ -28,37 +30,31 @@ type ProductCardProps = {
   onSelect: (product: ProductView) => void;
 };
 
-export default function ProductCard({
+const cardClass = (accentRing: string) =>
+  `group flex flex-col luxury-card rounded-2xl md:rounded-3xl overflow-hidden cursor-pointer ring-1 ${accentRing} focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-arkan-orange/40 transform-gpu will-change-transform tactile-active max-md:active:scale-[0.98] md:transition-all md:duration-300 md:hover:shadow-premium-hover hover-lift`;
+
+function ProductCardContent({
   product,
   brandBadge,
   halalLabel,
   quickViewLabel,
-  viewDetailsLabel,
   isRtl,
-  variants,
-  onSelect,
-}: ProductCardProps) {
+}: Omit<ProductCardProps, "variants" | "onSelect" | "viewDetailsLabel">) {
   return (
-    <motion.article
-      variants={variants}
-      onClick={() => onSelect(product)}
-      onKeyDown={(e) => {
-        if (e.key === "Enter" || e.key === " ") {
-          e.preventDefault();
-          onSelect(product);
-        }
-      }}
-      role="button"
-      tabIndex={0}
-      aria-label={`${viewDetailsLabel} ${product.title}`}
-      className={`group flex flex-col luxury-card rounded-2xl md:rounded-3xl overflow-hidden cursor-pointer ring-1 ${product.accentRing} focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-arkan-orange/40 transform-gpu will-change-transform tactile-active max-md:active:scale-[0.98] md:transition-all md:duration-300 md:hover:shadow-premium-hover hover-lift`}
-    >
-      <div className="relative h-52 sm:h-60 md:h-64 bg-gradient-to-br from-arkan-orange-light/40 via-white to-arkan-beige/60 overflow-hidden shrink-0 border-b border-black/5">
+    <>
+      <div
+        className={cn(
+          "relative h-52 sm:h-60 md:h-64 bg-gradient-to-br from-arkan-orange-light/40 via-white to-arkan-beige/60 overflow-hidden shrink-0 border-b border-black/5",
+          gpuLayerClass
+        )}
+        style={gpuLayerStyle}
+      >
         <Image
           src={product.image}
           alt={product.title}
           fill
-          className="object-cover transform-gpu transition-transform duration-300 md:duration-500 md:group-hover:scale-105 max-md:scale-100 group-active:scale-[1.02]"
+          loading="lazy"
+          className="object-cover transform-gpu md:transition-transform md:duration-500 md:group-hover:scale-105"
           sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
           quality={70}
         />
@@ -117,6 +113,58 @@ export default function ProductCard({
           </div>
         </div>
       </div>
-    </motion.article>
+    </>
+  );
+}
+
+export default function ProductCard({
+  product,
+  brandBadge,
+  halalLabel,
+  quickViewLabel,
+  viewDetailsLabel,
+  isRtl,
+  variants,
+  onSelect,
+}: ProductCardProps) {
+  const sharedProps = {
+    onClick: () => onSelect(product),
+    onKeyDown: (e: React.KeyboardEvent) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        onSelect(product);
+      }
+    },
+    role: "button" as const,
+    tabIndex: 0,
+    "aria-label": `${viewDetailsLabel} ${product.title}`,
+    className: cardClass(product.accentRing),
+    style: gpuLayerStyle,
+  };
+
+  if (variants) {
+    return (
+      <motion.article variants={variants} {...sharedProps}>
+        <ProductCardContent
+          product={product}
+          brandBadge={brandBadge}
+          halalLabel={halalLabel}
+          quickViewLabel={quickViewLabel}
+          isRtl={isRtl}
+        />
+      </motion.article>
+    );
+  }
+
+  return (
+    <article {...sharedProps}>
+      <ProductCardContent
+        product={product}
+        brandBadge={brandBadge}
+        halalLabel={halalLabel}
+        quickViewLabel={quickViewLabel}
+        isRtl={isRtl}
+      />
+    </article>
   );
 }

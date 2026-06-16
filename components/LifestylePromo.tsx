@@ -3,7 +3,9 @@
 import Image from "next/image";
 import { useToast } from "./ToastProvider";
 import { motion } from "motion/react";
-import { fluidSpring, revealTransition } from "@/lib/motion";
+import { fluidSpring } from "@/lib/motion";
+import { RevealOnScroll } from "./RevealOnScroll";
+import GpuImageFrame from "./GpuImageFrame";
 
 export default function LifestylePromo() {
   const { addToast } = useToast();
@@ -13,8 +15,8 @@ export default function LifestylePromo() {
   };
 
   return (
-    <section id="recipes" className="relative w-full h-[600px] overflow-hidden">
-      <Image
+    <section id="recipes" className="relative w-full h-[600px] overflow-hidden gpu-composite">
+      <GpuImageFrame
         src="https://images.unsplash.com/photo-1555939594-58d7cb561ad1?q=75&w=1280&auto=format&fit=crop"
         alt="دجاج مشوي مع الخضار"
         fill
@@ -25,13 +27,7 @@ export default function LifestylePromo() {
       <div className="absolute inset-0 bg-black/30" />
 
       <div className="absolute inset-0 flex items-center justify-center p-4 z-10">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-80px" }}
-          transition={revealTransition}
-          className="bg-arkan-orange/90 p-14 md:p-20 max-w-3xl w-full text-center shadow-premium flex flex-col items-center justify-center border border-white/20 rounded-3xl transform-gpu will-change-[transform,opacity]"
-        >
+        <RevealOnScroll className="bg-arkan-orange/90 p-14 md:p-20 max-w-3xl w-full text-center shadow-premium flex flex-col items-center justify-center border border-white/20 rounded-3xl">
           <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-white mb-6 drop-shadow-md">
             أنعش حياتك
           </h2>
@@ -48,7 +44,7 @@ export default function LifestylePromo() {
           >
             استكشف وصفات أركان
           </motion.button>
-        </motion.div>
+        </RevealOnScroll>
       </div>
 
       <div className="absolute bottom-0 w-full h-8 flex z-20">
@@ -58,8 +54,8 @@ export default function LifestylePromo() {
           "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?q=75&w=200&auto=format&fit=crop",
           "https://images.unsplash.com/photo-1562813733-b31f71025d54?q=75&w=200&auto=format&fit=crop",
         ].map((src, i) => (
-          <div key={i} className="w-1/4 h-full relative">
-            <Image src={src} alt="" fill className="object-cover" sizes="25vw" quality={60} />
+          <div key={i} className="w-1/4 h-full relative gpu-composite">
+            <Image src={src} alt="" fill loading="lazy" className="object-cover transform-gpu" sizes="25vw" quality={60} />
           </div>
         ))}
       </div>

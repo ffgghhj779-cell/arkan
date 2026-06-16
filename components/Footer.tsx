@@ -8,6 +8,8 @@ import ContactModal from "./ContactModal";
 import { useToast } from "./ToastProvider";
 import { motion } from "motion/react";
 import ArkanLogo from "./ArkanLogo";
+import { inViewViewport, gpuLayerClass, mobileFadeReveal } from "@/lib/motion";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -19,13 +21,20 @@ const containerVariants = {
 
 const itemVariants = {
   hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.6 } }
+  visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
+};
+
+const mobileItemVariants = {
+  hidden: { opacity: 0 },
+  visible: { opacity: 1, transition: mobileFadeReveal },
 };
 
 export default function Footer() {
   const [modalContent, setModalContent] = useState<{ title: string; content: React.ReactNode } | null>(null);
   const [isContactOpen, setIsContactOpen] = useState(false);
   const { addToast } = useToast();
+  const isMobile = useIsMobile();
+  const footerItemVariants = isMobile ? mobileItemVariants : itemVariants;
 
   const handleOpenModal = (title: string, type: 'privacy' | 'terms') => {
     setModalContent({
@@ -62,13 +71,13 @@ export default function Footer() {
         variants={containerVariants}
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: true, margin: "-50px" }}
-        className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10 pt-10"
+        viewport={inViewViewport}
+        className={`max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10 pt-10 ${gpuLayerClass}`}
       >
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-16">
           
           {/* Col 1: Links */}
-          <motion.div variants={itemVariants} className="flex flex-col gap-4 items-start md:items-end font-bold text-lg">
+          <motion.div variants={footerItemVariants} className="flex flex-col gap-4 items-start md:items-end font-bold text-lg">
              <Link href="#" onClick={(e) => handleLinkClick(e, 'اختر دجاجك بعناية')} className="hover:text-white/80 transition-colors">اختر دجاجك بعناية</Link>
              <Link href="#" onClick={(e) => handleLinkClick(e, 'شاهد الآن')} className="hover:text-white/80 transition-colors">شاهد الآن</Link>
              <Link href="#" onClick={(e) => handleLinkClick(e, 'إبداعات أركان')} className="hover:text-white/80 transition-colors">إبداعات أركان</Link>
@@ -77,7 +86,7 @@ export default function Footer() {
           </motion.div>
 
           {/* Col 2: Main Links */}
-          <motion.div variants={itemVariants} className="flex flex-col gap-4 items-start md:items-end font-bold text-lg text-yellow-300">
+          <motion.div variants={footerItemVariants} className="flex flex-col gap-4 items-start md:items-end font-bold text-lg text-yellow-300">
              <Link href="#" className="hover:text-white transition-colors">الصفحة الرئيسية</Link>
              <Link href="#about" className="hover:text-white transition-colors text-white">عن أركان</Link>
              <Link href="#products" className="hover:text-white transition-colors text-white">منتجاتنا</Link>
@@ -86,7 +95,7 @@ export default function Footer() {
           </motion.div>
 
           {/* Col 3: Address */}
-          <motion.div variants={itemVariants} className="text-sm leading-loose">
+          <motion.div variants={footerItemVariants} className="text-sm leading-loose">
              <p>شركة أركان للأغذية الدولية</p>
              <p>شركة أركان ذ.م.م</p>
              <p>مستودع رقم ٤</p>
@@ -97,7 +106,7 @@ export default function Footer() {
           </motion.div>
 
           {/* Col 4: Logo & Contact */}
-          <motion.div variants={itemVariants} className="flex flex-col items-center md:items-end gap-6 text-center md:text-right">
+          <motion.div variants={footerItemVariants} className="flex flex-col items-center md:items-end gap-6 text-center md:text-right">
              <ArkanLogo variant="footer" />
              
              <div className="text-sm">

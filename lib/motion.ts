@@ -1,3 +1,15 @@
+/** Standard viewport — trigger once, well before entering screen */
+export const inViewViewport = { once: true, margin: "100px" } as const;
+
+export const gpuLayerStyle = { transform: "translateZ(0)" } as const;
+
+export const gpuLayerClass = "transform-gpu will-change-transform";
+
+export const mobileFadeReveal = {
+  duration: 0.35,
+  ease: [0.22, 1, 0.36, 1] as const,
+};
+
 /** Fluid spring — low stiffness, high damping for GPU-friendly motion */
 export const fluidSpring = {
   type: "spring" as const,
@@ -64,10 +76,9 @@ export const mobileStaggerContainer = {
 };
 
 export const mobileStaggerItem = {
-  hidden: { opacity: 0, y: 14 },
+  hidden: { opacity: 0 },
   visible: {
     opacity: 1,
-    y: 0,
-    transition: mobileSpring,
+    transition: mobileFadeReveal,
   },
 };

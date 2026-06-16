@@ -6,12 +6,15 @@ import { ChevronLeft, ChevronRight, ArrowDown } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useToast } from "./ToastProvider";
 import { useLanguage } from "./LanguageProvider";
-import { fluidSpring, revealTransition } from "@/lib/motion";
+import { fluidSpring, revealTransition, mobileFadeReveal, gpuLayerClass, gpuLayerStyle } from "@/lib/motion";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { heroSlideImages, slideIds, type SlideId } from "@/lib/i18n/translations";
+import { cn } from "@/lib/utils";
 
 export default function HeroBanner() {
   const [current, setCurrent] = useState(0);
   const [direction, setDirection] = useState(1);
+  const isMobile = useIsMobile();
   const { addToast } = useToast();
   const { t, isRtl } = useLanguage();
 
@@ -68,13 +71,15 @@ export default function HeroBanner() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-            className="absolute inset-0 transform-gpu will-change-[opacity]"
+            className={cn("absolute inset-0", gpuLayerClass)}
+            style={gpuLayerStyle}
           >
             <Image
               src={slide.image}
               alt={slide.alt}
               fill
               priority={current === 0}
+              loading={current === 0 ? undefined : "lazy"}
               quality={75}
               className="object-cover object-center opacity-35 mix-blend-luminosity"
               sizes="100vw"
@@ -89,11 +94,12 @@ export default function HeroBanner() {
           <motion.div
             key={`content-${slide.id}-${t.meta.title}`}
             custom={direction}
-            initial={{ opacity: 0, y: direction > 0 ? 24 : -24 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: direction > 0 ? -24 : 24 }}
-            transition={revealTransition}
-            className="flex flex-col items-center justify-center gap-2 md:gap-3 transform-gpu will-change-[transform,opacity]"
+            initial={isMobile ? { opacity: 0 } : { opacity: 0, y: direction > 0 ? 24 : -24 }}
+            animate={isMobile ? { opacity: 1 } : { opacity: 1, y: 0 }}
+            exit={isMobile ? { opacity: 0 } : { opacity: 0, y: direction > 0 ? -24 : 24 }}
+            transition={isMobile ? mobileFadeReveal : revealTransition}
+            className={cn("flex flex-col items-center justify-center gap-2 md:gap-3", gpuLayerClass)}
+            style={gpuLayerStyle}
           >
             <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-[5.5rem] font-black text-arkan-gold leading-[1.08] tracking-tight drop-shadow-[0_2px_24px_rgba(0,0,0,0.35)]">
               {slide.lineTop}
@@ -123,10 +129,11 @@ export default function HeroBanner() {
         </AnimatePresence>
 
         <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4, ...revealTransition }}
-          className="mt-10 md:mt-14 flex flex-wrap items-center justify-center gap-4"
+          initial={isMobile ? { opacity: 0 } : { opacity: 0, y: 16 }}
+          animate={isMobile ? { opacity: 1 } : { opacity: 1, y: 0 }}
+          transition={{ delay: isMobile ? 0 : 0.4, ...(isMobile ? mobileFadeReveal : revealTransition) }}
+          className={cn("mt-10 md:mt-14 flex flex-wrap items-center justify-center gap-4", gpuLayerClass)}
+          style={gpuLayerStyle}
         >
           <motion.button
             type="button"

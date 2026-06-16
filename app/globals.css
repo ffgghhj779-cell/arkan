@@ -70,6 +70,13 @@ body {
   .section-body {
     @apply text-base leading-relaxed;
   }
+  .animate-arc-spin {
+    animation: none;
+    visibility: hidden;
+  }
+  .animate-scroll-hint {
+    animation: none;
+  }
 }
 
 /* Page shell — native scroll only; avoid touch-action on scroll containers */
@@ -97,9 +104,11 @@ body {
 }
 
 /* GPU compositing layer for animated elements */
-.gpu-layer {
+.gpu-layer,
+.gpu-composite {
   transform: translateZ(0);
   backface-visibility: hidden;
+  @apply transform-gpu will-change-transform;
 }
 
 /* Premium section rhythm */
