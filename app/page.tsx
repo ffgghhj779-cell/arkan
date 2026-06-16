@@ -9,15 +9,17 @@ import Footer from "@/components/Footer";
 
 export default function Home() {
   return (
-    <main className="min-h-screen bg-white overflow-x-hidden">
+    <main className="mobile-app-shell min-h-[100dvh] bg-white overflow-x-hidden">
       <Navbar />
-      <HeroBanner />
-      <FeaturedProducts />
-      <ProductCategories />
-      <SingleProductHighlight />
-      <LifestylePromo />
-      <SplitFeatures />
-      <Footer />
+      <div className="flex flex-col gap-0">
+        <HeroBanner />
+        <FeaturedProducts />
+        <ProductCategories />
+        <SingleProductHighlight />
+        <LifestylePromo />
+        <SplitFeatures />
+        <Footer />
+      </div>
     </main>
   );
 }

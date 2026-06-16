@@ -2,6 +2,7 @@
 
 @theme {
   --font-arabic: var(--font-tajawal), ui-sans-serif, system-ui, sans-serif;
+  --font-english: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
 
   --color-arkan-orange: #E85D04;
   --color-arkan-orange-hover: #c45203;
@@ -27,6 +28,74 @@ html {
 
 body {
   @apply bg-white text-arkan-text selection:bg-arkan-orange selection:text-white overflow-x-hidden;
+}
+
+.font-arabic {
+  font-family: var(--font-arabic);
+}
+
+.font-english {
+  font-family: var(--font-english);
+}
+
+/* Glass navbar & luxury cards — blur degrades on mobile for 120fps */
+.glass-nav {
+  @apply bg-arkan-orange/88 backdrop-blur-xl border-b border-white/10 shadow-lg shadow-arkan-orange/10;
+}
+
+.luxury-card {
+  @apply bg-white/95 backdrop-blur-sm border border-black/5 shadow-arkan-card;
+}
+
+.glass-overlay {
+  @apply bg-white/90 backdrop-blur-md border border-white/20 shadow-glass;
+}
+
+@media (max-width: 767px) {
+  .glass-nav {
+    @apply bg-arkan-orange/96 backdrop-blur-none;
+  }
+  .luxury-card {
+    @apply bg-white backdrop-blur-none;
+  }
+  .glass-overlay {
+    @apply bg-white/96 backdrop-blur-none;
+  }
+  .section-padding {
+    @apply py-14;
+  }
+  .section-heading {
+    @apply text-3xl;
+  }
+  .section-body {
+    @apply text-base leading-relaxed;
+  }
+}
+
+/* Native-app shell */
+.mobile-app-shell {
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-y: contain;
+  touch-action: manipulation;
+}
+
+/* Minimum 44×44px touch targets (Apple HIG) */
+.touch-target {
+  @apply min-h-11 min-w-11 inline-flex items-center justify-center;
+}
+
+.tactile-active {
+  @apply transition-[transform,opacity] duration-100 ease-out active:scale-[0.97] active:opacity-80;
+}
+
+/* Hover effects only on fine-pointer devices — prevents sticky hover on touch */
+@media (hover: hover) and (pointer: fine) {
+  .hover-lift:hover {
+    transform: translateY(-6px);
+  }
+  .hover-scale-image:hover {
+    transform: scale(1.05);
+  }
 }
 
 /* GPU compositing layer for animated elements */

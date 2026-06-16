@@ -5,7 +5,7 @@ const LOGO_WIDTH = 1536;
 const LOGO_HEIGHT = 1024;
 
 type ArkanLogoProps = {
-  variant?: "navbar" | "footer";
+  variant?: "navbar" | "footer" | "drawer";
   className?: string;
   imageClassName?: string;
   priority?: boolean;
@@ -23,6 +23,7 @@ export default function ArkanLogo({
         "flex items-center justify-center shrink-0",
         variant === "navbar" && "h-full max-h-16",
         variant === "footer" && "h-auto",
+        variant === "drawer" && "h-auto",
         className
       )}
     >
@@ -34,10 +35,10 @@ export default function ArkanLogo({
         priority={priority}
         className={cn(
           "h-auto object-contain transform-gpu",
-          /* screen: black canvas disappears on orange; logo artwork stays visible */
-          "mix-blend-screen",
+          variant !== "drawer" && "mix-blend-screen",
           variant === "navbar" && "w-24 sm:w-28 md:w-32 max-h-14",
           variant === "footer" && "w-32 md:w-36 lg:w-40 max-h-16",
+          variant === "drawer" && "w-24 max-h-10",
           imageClassName
         )}
       />
