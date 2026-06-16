@@ -13,31 +13,37 @@ import {
 import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { useToast } from "./ToastProvider";
-import ArkanLogo from "./ArkanLogo";
+import ArkanBrandLockup from "./ArkanBrandLockup";
 import LanguageSwitcher from "./LanguageSwitcher";
 import { useLanguage } from "./LanguageProvider";
 import { fluidSpring, mobileDrawerSpring } from "@/lib/motion";
+import { lockBodyScroll, unlockBodyScroll } from "@/lib/scroll-lock";
 import { navHrefs, type NavLinkKey } from "@/lib/i18n/translations";
 
 const dropdownKeys: NavLinkKey[] = ["products", "recipes", "whatsNew"];
 
 export default function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [menuInteractive, setMenuInteractive] = useState(false);
   const { addToast } = useToast();
   const { t, isRtl } = useLanguage();
 
-  const closeMenu = useCallback(() => setIsMobileMenuOpen(false), []);
+  const closeMenu = useCallback(() => {
+    setMenuInteractive(false);
+    unlockBodyScroll();
+    setIsMobileMenuOpen(false);
+  }, []);
+
+  const openMenu = useCallback(() => {
+    setMenuInteractive(true);
+    setIsMobileMenuOpen(true);
+  }, []);
 
   useEffect(() => {
     if (!isMobileMenuOpen) return;
-    const prevOverflow = document.body.style.overflow;
-    const prevTouch = document.body.style.touchAction;
-    document.body.style.overflow = "hidden";
-    document.body.style.touchAction = "none";
-    return () => {
-      document.body.style.overflow = prevOverflow;
-      document.body.style.touchAction = prevTouch;
-    };
+    lockBodyScroll();
+    setMenuInteractive(true);
+    return () => unlockBodyScroll();
   }, [isMobileMenuOpen]);
 
   useEffect(() => {
@@ -65,20 +71,20 @@ export default function Navbar() {
   const drawerHiddenX = isRtl ? "100%" : "-100%";
 
   return (
-    <header className="w-full glass-nav text-white z-50 sticky top-0 isolate transform-gpu will-change-transform">
+    <header className="w-full glass-nav text-white z-50 sticky top-0 isolate">
       <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16 md:h-20">
           <Link
             href="#"
-            className="flex-shrink-0 flex items-center justify-center h-full py-1 touch-target tactile-active !min-w-0 px-1"
+            className="shrink min-w-0 flex items-center h-full py-1 touch-target tactile-active pe-2"
             aria-label={t.common.homeAria}
           >
             <motion.div
               whileTap={{ scale: 0.97 }}
               transition={fluidSpring}
-              className="transform-gpu will-change-transform flex items-center justify-center"
+              className="flex items-center min-w-0"
             >
-              <ArkanLogo variant="navbar" priority />
+              <ArkanBrandLockup variant="nav" priority />
             </motion.div>
           </Link>
 
@@ -88,12 +94,12 @@ export default function Navbar() {
                 key={key}
                 href={navHrefs[key]}
                 onClick={(e) => handleNavClick(e, key, t.nav[key])}
-                className="font-bold text-sm lg:text-base hover:text-white/80 transition-colors duration-200 flex items-center gap-1 group relative pb-1 transform-gpu"
+                className="font-bold text-sm lg:text-base hover:text-white/80 transition-colors duration-200 flex items-center gap-1 group relative pb-1"
               >
                 {t.nav[key]}
                 {dropdownKeys.includes(key) && (
                   <svg
-                    className="w-4 h-4 transition-transform duration-300 group-hover:rotate-180 transform-gpu"
+                    className="w-4 h-4 transition-transform duration-300 group-hover:rotate-180"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -112,7 +118,7 @@ export default function Navbar() {
             ))}
           </nav>
 
-          <div className="flex items-center gap-1.5 sm:gap-3 z-50">
+          <div className="flex items-center gap-1.5 sm:gap-3 z-50 shrink-0">
             <div className="hidden sm:flex items-center gap-2">
               {(
                 [
@@ -132,7 +138,7 @@ export default function Navbar() {
                     e.preventDefault();
                     addToast(toast);
                   }}
-                  className="touch-target tactile-active hover:text-white transition-colors transform-gpu will-change-transform rounded-full"
+                  className="touch-target tactile-active hover:text-white transition-colors rounded-full"
                   aria-label={label}
                 >
                   <Icon className="w-4 h-4" />
@@ -150,7 +156,7 @@ export default function Navbar() {
               whileTap={{ scale: 0.92 }}
               transition={fluidSpring}
               onClick={() => addToast(t.common.openingSearch)}
-              className="hidden xl:flex touch-target tactile-active bg-white/15 md:backdrop-blur-sm max-md:bg-white/20 rounded-full border border-white/15 transition-colors hover:bg-white hover:text-arkan-orange text-white transform-gpu will-change-transform"
+              className="hidden xl:flex touch-target tactile-active bg-white/15 md:backdrop-blur-sm max-md:bg-white/20 rounded-full border border-white/15 transition-colors hover:bg-white hover:text-arkan-orange text-white"
               aria-label={t.common.search}
             >
               <Search className="w-5 h-5" />
@@ -158,8 +164,8 @@ export default function Navbar() {
 
             <button
               type="button"
-              onClick={() => setIsMobileMenuOpen(true)}
-              className="xl:hidden touch-target tactile-active bg-white/20 max-md:backdrop-blur-none md:backdrop-blur-sm rounded-xl border border-white/15 transition-colors active:bg-white/30 transform-gpu will-change-transform"
+              onClick={openMenu}
+              className="xl:hidden touch-target tactile-active bg-white/20 max-md:backdrop-blur-none md:backdrop-blur-sm rounded-xl border border-white/15 transition-colors active:bg-white/30"
               aria-label={t.common.openMenu}
               aria-expanded={isMobileMenuOpen}
               aria-controls="mobile-nav-drawer"
@@ -170,11 +176,13 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* Premium mobile drawer */}
       <AnimatePresence>
         {isMobileMenuOpen && (
-          <div className="xl:hidden fixed inset-0 z-[100]" role="presentation">
-            {/* Scrim — solid on mobile (no blur) for GPU performance */}
+          <div
+            className="xl:hidden fixed inset-0 z-[100]"
+            role="presentation"
+            style={{ pointerEvents: menuInteractive ? "auto" : "none" }}
+          >
             <motion.button
               type="button"
               aria-label={t.common.closeMenu}
@@ -183,7 +191,7 @@ export default function Navbar() {
               exit={{ opacity: 0 }}
               transition={{ duration: 0.15 }}
               onClick={closeMenu}
-              className="absolute inset-0 bg-black/65 max-md:bg-black/70 md:backdrop-blur-[2px] transform-gpu will-change-[opacity] cursor-default"
+              className="absolute inset-0 bg-black/65 max-md:bg-black/70 md:backdrop-blur-[2px] cursor-default"
             />
 
             <motion.nav
@@ -195,23 +203,20 @@ export default function Navbar() {
               animate={{ x: 0 }}
               exit={{ x: drawerHiddenX }}
               transition={mobileDrawerSpring}
-              style={{ willChange: "transform" }}
-              className={`fixed top-0 ${drawerSide}-0 h-[100dvh] w-[min(88vw,320px)] bg-white z-[101] flex flex-col shadow-2xl border-e border-black/5 transform-gpu`}
+              className={`fixed top-0 ${drawerSide}-0 h-[100dvh] w-[min(88vw,320px)] bg-white z-[101] flex flex-col shadow-2xl border-e border-black/5`}
             >
-              {/* Drawer header */}
-              <div className="flex items-center justify-between px-4 pt-[max(1rem,env(safe-area-inset-top))] pb-3 border-b border-black/5 shrink-0">
-                <ArkanLogo variant="drawer" />
+              <div className="flex items-center justify-between px-4 pt-[max(1rem,env(safe-area-inset-top))] pb-3 border-b border-black/5 shrink-0 gap-3">
+                <ArkanBrandLockup variant="drawer" />
                 <button
                   type="button"
                   onClick={closeMenu}
-                  className="touch-target tactile-active rounded-xl bg-arkan-bg text-arkan-navy border border-black/5 transform-gpu will-change-transform"
+                  className="touch-target tactile-active rounded-xl bg-arkan-bg text-arkan-navy border border-black/5 shrink-0"
                   aria-label={t.common.closeMenu}
                 >
                   <X className="w-5 h-5" />
                 </button>
               </div>
 
-              {/* Scrollable links */}
               <div className="flex-1 overflow-y-auto overscroll-contain px-3 py-4">
                 <div className="mb-5 flex justify-center sm:hidden">
                   <LanguageSwitcher variant="light" />
@@ -223,7 +228,7 @@ export default function Navbar() {
                       <Link
                         href={navHrefs[key]}
                         onClick={(e) => handleNavClick(e, key, t.nav[key])}
-                        className="flex items-center min-h-[48px] px-4 py-3 rounded-xl text-base font-bold text-arkan-navy border border-transparent active:scale-[0.98] active:bg-arkan-orange/8 active:border-arkan-orange/15 transition-[transform,background-color,border-color] duration-100 transform-gpu will-change-transform tactile-active"
+                        className="flex items-center min-h-[48px] px-4 py-3 rounded-xl text-base font-bold text-arkan-navy border border-transparent active:scale-[0.98] active:bg-arkan-orange/8 active:border-arkan-orange/15 transition-[transform,background-color,border-color] duration-100 tactile-active"
                       >
                         {t.nav[key]}
                       </Link>
@@ -250,7 +255,7 @@ export default function Navbar() {
                           e.preventDefault();
                           addToast(toast);
                         }}
-                        className="touch-target tactile-active rounded-full border border-black/5 text-arkan-navy active:bg-arkan-orange active:text-white active:border-arkan-orange transition-colors duration-100 transform-gpu"
+                        className="touch-target tactile-active rounded-full border border-black/5 text-arkan-navy active:bg-arkan-orange active:text-white active:border-arkan-orange transition-colors duration-100"
                         aria-label={toast}
                       >
                         <Icon className="w-5 h-5" />
@@ -260,7 +265,6 @@ export default function Navbar() {
                 </div>
               </div>
 
-              {/* Safe area bottom padding */}
               <div className="shrink-0 h-[env(safe-area-inset-bottom,0px)]" />
             </motion.nav>
           </div>

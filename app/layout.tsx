@@ -30,7 +30,7 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
       style={{scrollPaddingTop: '5rem'}}
       suppressHydrationWarning
     >
-      <body className="font-arabic antialiased gpu-layer" suppressHydrationWarning>
+      <body className="font-arabic antialiased" suppressHydrationWarning>
         <LanguageProvider>
           <ToastProvider>{children}</ToastProvider>
         </LanguageProvider>

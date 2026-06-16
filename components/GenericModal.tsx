@@ -2,6 +2,7 @@
 import { motion, AnimatePresence } from "motion/react";
 import { X } from "lucide-react";
 import { useEffect } from "react";
+import { lockBodyScroll, unlockBodyScroll } from "@/lib/scroll-lock";
 
 interface GenericModalProps {
   isOpen: boolean;
@@ -12,9 +13,9 @@ interface GenericModalProps {
 
 export default function GenericModal({ isOpen, onClose, title, children }: GenericModalProps) {
   useEffect(() => {
-    if (isOpen) document.body.style.overflow = 'hidden';
-    else document.body.style.overflow = 'auto';
-    return () => { document.body.style.overflow = 'auto'; }
+    if (!isOpen) return;
+    lockBodyScroll();
+    return () => unlockBodyScroll();
   }, [isOpen]);
 
   return (

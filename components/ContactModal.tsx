@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { X, Loader2, Send } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useToast } from "./ToastProvider";
+import { lockBodyScroll, unlockBodyScroll } from "@/lib/scroll-lock";
 
 interface ContactModalProps {
   isOpen: boolean;
@@ -15,9 +16,9 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
   const { addToast } = useToast();
 
   useEffect(() => {
-    if (isOpen) document.body.style.overflow = 'hidden';
-    else document.body.style.overflow = 'auto';
-    return () => { document.body.style.overflow = 'auto'; }
+    if (!isOpen) return;
+    lockBodyScroll();
+    return () => unlockBodyScroll();
   }, [isOpen]);
 
   const handleSubmit = async (e: React.FormEvent) => {

@@ -19,6 +19,7 @@ import {
   staggerItem,
 } from "@/lib/motion";
 import { productIds, productMeta } from "@/lib/i18n/translations";
+import { lockBodyScroll, unlockBodyScroll } from "@/lib/scroll-lock";
 
 function getVisibleCount(isMobile: boolean) {
   if (typeof window === "undefined") return isMobile ? 1 : 3;
@@ -42,6 +43,7 @@ function useVisibleCount(isMobile: boolean) {
 
 export default function FeaturedProducts() {
   const [selectedProduct, setSelectedProduct] = useState<ProductView | null>(null);
+  const [modalInteractive, setModalInteractive] = useState(false);
   const [page, setPage] = useState(0);
   const isMobile = useIsMobile();
   const visibleCount = useVisibleCount(isMobile);
@@ -75,9 +77,27 @@ export default function FeaturedProducts() {
     setPage((p) => (p <= 0 ? maxPage : p - 1));
   }, [maxPage]);
 
+  const openProductModal = useCallback((product: ProductView) => {
+    setModalInteractive(true);
+    setSelectedProduct(product);
+  }, []);
+
+  const closeProductModal = useCallback(() => {
+    setModalInteractive(false);
+    unlockBodyScroll();
+    setSelectedProduct(null);
+  }, []);
+
+  useEffect(() => {
+    if (!selectedProduct) return;
+    lockBodyScroll();
+    setModalInteractive(true);
+    return () => unlockBodyScroll();
+  }, [selectedProduct]);
+
   const handleAddToCart = (productTitle: string) => {
     addToast(t.products.addedToCart.replace("{product}", productTitle));
-    setSelectedProduct(null);
+    closeProductModal();
   };
 
   const PrevIcon = isRtl ? ChevronRight : ChevronLeft;
@@ -158,7 +178,7 @@ export default function FeaturedProducts() {
                     viewDetailsLabel={t.products.viewDetails}
                     isRtl={isRtl}
                     variants={itemVariants}
-                    onSelect={setSelectedProduct}
+                    onSelect={openProductModal}
                   />
                 ))}
               </motion.div>
@@ -231,13 +251,14 @@ export default function FeaturedProducts() {
             role="dialog"
             aria-modal="true"
             aria-labelledby="product-modal-title"
+            style={{ pointerEvents: modalInteractive ? "auto" : "none" }}
           >
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.15 }}
-              onClick={() => setSelectedProduct(null)}
+              onClick={closeProductModal}
               className="absolute inset-0 bg-arkan-navy-deep/80 max-md:bg-arkan-navy-deep/85 transform-gpu"
             />
             <motion.div
@@ -249,7 +270,7 @@ export default function FeaturedProducts() {
             >
               <button
                 type="button"
-                onClick={() => setSelectedProduct(null)}
+                onClick={closeProductModal}
                 className="absolute top-3 start-3 z-50 touch-target tactile-active bg-white rounded-full shadow-arkan-card border border-black/5 transform-gpu"
                 aria-label={t.common.close}
               >

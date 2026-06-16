@@ -14,6 +14,7 @@ import {
   type Locale,
   type Translations,
 } from "@/lib/i18n/translations";
+import { resetBodyScroll } from "@/lib/scroll-lock";
 
 const STORAGE_KEY = "arkan-locale";
 
@@ -34,6 +35,7 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    resetBodyScroll();
     const saved = localStorage.getItem(STORAGE_KEY) as Locale | null;
     if (saved === "ar" || saved === "en") {
       setLocaleState(saved);

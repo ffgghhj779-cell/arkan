@@ -72,11 +72,9 @@ body {
   }
 }
 
-/* Native-app shell */
+/* Page shell — native scroll only; avoid touch-action on scroll containers */
 .mobile-app-shell {
-  -webkit-overflow-scrolling: touch;
-  overscroll-behavior-y: contain;
-  touch-action: manipulation;
+  overflow-x: clip;
 }
 
 /* Minimum 44×44px touch targets (Apple HIG) */

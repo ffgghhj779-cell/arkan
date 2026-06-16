@@ -21,6 +21,7 @@ export type Translations = {
   common: {
     brand: string;
     brandEn: string;
+    slogan: string;
     halal: string;
     search: string;
     close: string;
@@ -107,6 +108,7 @@ export const translations: Record<Locale, Translations> = {
     common: {
       brand: "أركان",
       brandEn: "Arkan",
+      slogan: "الجودة التي تثق بها",
       halal: "حلال",
       search: "بحث",
       close: "إغلاق",
@@ -239,6 +241,7 @@ export const translations: Record<Locale, Translations> = {
     common: {
       brand: "Arkan",
       brandEn: "Arkan",
+      slogan: "Quality You Trust",
       halal: "Halal",
       search: "Search",
       close: "Close",
